@@ -30,11 +30,29 @@ static TwoDataFrame SplitData (DoubleDataframe* dataBefore, int feature, double 
 
     /* vector of data based on acquired indexes*/
     int numRows = dataBefore->rows;
-    DoubleDataframe presData;
-
-    Vector rowBuffer;
-
     
+    // initialize present data dataframe
+    DoubleDataframe presData;
+    presData.rows = 0;
+    presData.cols = 0;
+    presData.vec = malloc(presData.rows * sizeof(Vector*));
+    for (int i = 0; i < presData.rows; i++) {
+        presData.vec[i] = create_vector();
+    }
+
+    // initialize absent data dataframe
+    DoubleDataframe absData;
+    absData.rows = 0;
+    absData.cols = 0;
+    absData.vec = malloc(absData.rows * sizeof(Vector*));
+    for (int i = 0; i < absData.rows; i++) {
+        absData.vec[i] = create_vector();
+    }
+
+    // initialize buffer vector
+    Vector rowBuffer;
+    rowBuffer.len = 0;
+    rowBuffer.arr = (double*)malloc(0 * sizeof(double));
 
     for (int row = 0; row < numRows; row++)
     {
@@ -47,11 +65,9 @@ static TwoDataFrame SplitData (DoubleDataframe* dataBefore, int feature, double 
         clean(&rowBuffer);
     }
 
-    DoubleDataframe absData;
-
     for (int row = 0; row < numRows; row++)
     {
-        for (int col = 0; row < absSplit->len; col++)
+        for (int col = 0; col < absSplit->len; col++)
         {
             push_back(&rowBuffer, dataBefore->vec[row]->arr[col]);
         }
