@@ -33,13 +33,16 @@ static TwoDataFrame SplitData (DoubleDataframe* dataBefore, int feature, double 
     DoubleDataframe presData;
 
     Vector rowBuffer;
+    rowBuffer.len = 0;
+    rowBuffer.arr = (double*)malloc(0 * sizeof(double));
 
-    
+
 
     for (int row = 0; row < numRows; row++)
     {
         for (int col = 0; col < presSplit->len; col++)
         {
+            printf ("%lf\n", dataBefore->vec[row]->arr[col]);
             push_back(&rowBuffer, dataBefore->vec[row]->arr[col]);
         }
 
