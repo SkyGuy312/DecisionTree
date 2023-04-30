@@ -36,10 +36,10 @@ DoubleDataframe* read(char* trainPath) {
     while (fgets(line, MAX_LINE_LENGTH, fp)) {
         col = 0;
         token = strtok(line, ",");
-        if (token == '\r' || token == '\n')
-        {
-            printf ("BP\n");
-        }
+        // if (token == '\r' || token == '\n')
+        // {
+        //     printf ("BP\n");
+        // }
 
         while (token != NULL) {
             SetElementDoubleDataframe(dataframe, row, col, atof(token));
