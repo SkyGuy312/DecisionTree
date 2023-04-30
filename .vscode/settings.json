@@ -1,0 +1,9 @@
+{
+    "cmake.configureOnOpen": true,
+    "files.associations": {
+        "dataframe_csv.h": "c",
+        "dataframes.h": "c",
+        "stdlib.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "enabled"
+}
