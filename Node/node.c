@@ -84,7 +84,7 @@ static IntVector** getSplitTargets(DoubleDataframe* dataP, int feature, double c
 
   IntVector* trueLabels = create_int_vector();
   IntVector* falseLabels = create_int_vector();
-
+/*
   for (int i = 0; i < falseSplit->len; i++)
   {
     push_back_intVec(falseLabels, allLabels->arr[falseSplit->arr[i]]);
@@ -94,6 +94,7 @@ static IntVector** getSplitTargets(DoubleDataframe* dataP, int feature, double c
   {
     push_back_intVec(trueLabels, allLabels->arr[trueSplit->arr[i]]);
   }
+*/
 
   IntVector** retData = malloc (2 * sizeof(IntVector*));
 
