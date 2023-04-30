@@ -167,12 +167,15 @@ best_split_return getBestSplit(DoubleDataframe* dataP)
     // }
     // printf("\n");
 
+    // if (feature == 6)
+    // {
+    //   printf("BP\n");
+    // }
+
+    
 /* /////////////////////////////////////DEBUGGING CODE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-    if (feature == 6)
-    {
-      printf("BP\n");
-    }
+    
 
     // Calculate Gini Impurity for splitting every feature by every category
     for (int i = 0; i < featureVec->len; i++)
