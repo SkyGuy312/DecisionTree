@@ -87,13 +87,12 @@ void push_back_vector(Vector* vec, Vector* new_vec)
 }
 
 void clean(Vector* vec) {
-    vec->len = 1;
+    vec->len = 0;
     free(vec->arr);
     vec->arr = (double*)calloc(vec->len, sizeof(double));
 }
 
 void print_vector(const Vector* vec) {
-    printf("Vector of length %d: [", vec->len);
     for (int i = 0; i < vec->len; i++) {
         printf("%lf", vec->arr[i]);
         if (i != vec->len - 1) {
@@ -101,6 +100,8 @@ void print_vector(const Vector* vec) {
         }
     }
     printf("]\n");
+
+    printf("Vector of length %d: [", vec->len);
 }
 
 void print_int_vector(IntVector* vec) {

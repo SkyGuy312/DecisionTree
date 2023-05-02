@@ -1,8 +1,9 @@
 #include "DecisionTree.h"
 #include "../CSVReader/csvreader.h"
+#include <stdio.h>
 #include <stdlib.h>
 
-static TwoDataFrame SplitData (DoubleDataframe* dataBefore, int feature, double category)
+static DoubleDataframe** SplitData (DoubleDataframe* dataBefore, int feature, double category)
 {
     // vectors to indexes of values which either realize the category criterion or not
     IntVector* presSplit = create_int_vector();
@@ -32,53 +33,77 @@ static TwoDataFrame SplitData (DoubleDataframe* dataBefore, int feature, double 
     int numRows = dataBefore->rows;
     
     // initialize present data dataframe
-    DoubleDataframe presData;
-    presData.rows = 0;
-    presData.cols = 0;
-    presData.vec = malloc(presData.rows * sizeof(Vector*));
-    for (int i = 0; i < presData.rows; i++) {
-        presData.vec[i] = create_vector();
-    }
+    DoubleDataframe* presData = CreateDoubleDataframe(0,numRows);
 
     // initialize absent data dataframe
-    DoubleDataframe absData;
-    absData.rows = 0;
-    absData.cols = 0;
-    absData.vec = malloc(absData.rows * sizeof(Vector*));
-    for (int i = 0; i < absData.rows; i++) {
-        absData.vec[i] = create_vector();
-    }
+    DoubleDataframe* absData = CreateDoubleDataframe(0,numRows);
 
     // initialize buffer vector
-    Vector rowBuffer;
-    rowBuffer.len = 0;
-    rowBuffer.arr = (double*)malloc(0 * sizeof(double));
+    Vector* rowBuffer = create_vector();
 
-    for (int row = 0; row < numRows; row++)
-    {
-        for (int col = 0; col < presSplit->len; col++)
-        {
-            push_back(&rowBuffer, dataBefore->vec[row]->arr[col]);
-        }
+/* /////////////////////////////////////DEBUGGING CODE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-        push_back_row (&presData, &rowBuffer);
-        clean(&rowBuffer);
+    // printf ("PresSplit len is: %d", presSplit->len);
+    // for (int i = 0; i < presSplit->len; i++)
+    // {
+    //     printf ("%d, ", presSplit->arr[i]);
+    // }
+    // printf ("\n");
+
+    // printf ("absSplit length is: %d, values are:\n", absSplit->len);
+    // for (int i = 0; i < absSplit->len; i++)
+    // {
+    //     printf ("%d, ", absSplit->arr[i]);
+    // }
+    // printf ("\n");
+
+/* /////////////////////////////////////DEBUGGING CODE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+    // fill the dataframe of present data
+
+    DoubleDataframe* dataBeforeCpy = CopyDoubleDataframe (dataBefore);
+    dataBeforeCpy = TransposeDoubleDataframe (dataBeforeCpy);
+
+    printf ("Assigning split nodes:\nRight Node:\n");
+    for (int i = 0 ; i < presSplit->len; i++)
+    {   
+        printf ("%d of %d\n",i+1, presSplit->len);
+        rowBuffer = CopyVector (dataBeforeCpy->vec[presSplit->arr[i]]);
+        push_back_row (presData, rowBuffer);
     }
 
-    for (int row = 0; row < numRows; row++)
-    {
-        for (int col = 0; col < absSplit->len; col++)
-        {
-            push_back(&rowBuffer, dataBefore->vec[row]->arr[col]);
-        }
-        push_back_row(&absData, &rowBuffer);
-        clean(&rowBuffer);
+    // fill the dataframe of absent data
+    printf ("Assigning split nodes:\nLeft Node:\n");
+    for (int i = 0 ; i < absSplit->len; i++)
+    {   
+        printf ("%d of %d\n",i+1, absSplit->len);
+        rowBuffer = CopyVector (dataBeforeCpy->vec[absSplit->arr[i]]);
+        push_back_row (absData, rowBuffer);
     }
 
-    TwoDataFrame returnObj;
+    presData = TransposeDoubleDataframe(presData);
+    absData = TransposeDoubleDataframe(absData);
 
-    returnObj.pres = presData;
-    returnObj.abs = absData;
+    
+
+    DoubleDataframe** returnObj = malloc (2 * sizeof(DoubleDataframe*));
+    returnObj[0] = CopyDoubleDataframe(presData);
+    returnObj[1] = CopyDoubleDataframe(absData);
+
+/* /////////////////////////////////////DEBUGGING CODE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+    // printf ("length of presData is %d, its values are:\n", returnObj[0]->rows);
+    // for (int i = 0; i < returnObj[0]->rows; i++)
+    // {
+    //     for (int j = 0; j < returnObj[0]->vec[i]->len; i++)
+    //     {
+    //         printf ("%lf, ",returnObj[0]->vec[i]->arr[j]);
+    //     }
+    //     printf("\n");
+    // }
+
+/* /////////////////////////////////////DEBUGGING CODE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
 
     return returnObj;
 }
@@ -96,20 +121,21 @@ void ConstructTree (Node* nodeP)
     {
         // recurse on children
 
-        TwoDataFrame childrensData = SplitData (nodeP->dataframe, nodeP->best_split.feature, nodeP->best_split.category);
+        DoubleDataframe** childrensData = malloc (2 * sizeof(DoubleDataframe*));
+        childrensData = SplitData (nodeP->dataframe, nodeP->best_split.feature, nodeP->best_split.category);
 
         // if there is data after split, build a child node:
-        if (childrensData.pres.vec[0]->len > MIN_SAMPLES)
+        if (childrensData[0]->cols > MIN_SAMPLES)
         {
-            Node* newRightChild = newNode(&(childrensData.pres));
+            Node* newRightChild = newNode(childrensData[0]);
             newRightChild->depth++;
             nodeP->child_right = newRightChild;
             ConstructTree (nodeP->child_right);
         }
 
-        if (childrensData.abs.vec[0]->len > MIN_SAMPLES)
+        if (childrensData[1]->cols > MIN_SAMPLES)
         {
-            Node* newLeftChild = newNode(&(childrensData.abs));
+            Node* newLeftChild = newNode(childrensData[1]);
             newLeftChild->depth++;
             nodeP->child_left = newLeftChild;
             ConstructTree(nodeP->child_left);

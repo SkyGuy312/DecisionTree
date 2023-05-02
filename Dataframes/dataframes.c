@@ -102,10 +102,16 @@ void DeleteIntDataframe(IntDataframe* df) {
 void push_back_row(DoubleDataframe* df, Vector* row_vec)
 {
     int i;
-    for (i = 0; i < df->cols; i++) {
-        push_back_vector(df->vec[i], row_vec);
+    if (df->rows == 0)
+    {
+        df->vec = malloc (sizeof(Vector*));
     }
     df->rows++;
+    df->vec = realloc(df->vec, (df->rows) * sizeof(Vector*));
+    df->vec[df->rows-1] = create_vector();
+    df->vec[df->rows-1] = CopyVector (row_vec);
+    // push_back_vector(df->vec[i], row_vec);
+    // df->rows++;
 }
 
 void PrintDoubleDataframe(DoubleDataframe* df) {

@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LINE_LENGTH 1024
+#define MAX_LINE_LENGTH 1015
 
 DoubleDataframe* read(char* trainPath) {
     FILE* fp = fopen(trainPath, "r");

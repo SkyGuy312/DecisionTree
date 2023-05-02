@@ -62,7 +62,7 @@ static IntVector** getSplitTargets(DoubleDataframe* dataP, int feature, double c
   int idx = 0;
 
   // get split indexes
-  for (int i = 0; i < dataP->rows; i++)
+  for (int i = 0; i < dataP->cols; i++)
   {
     double val = GetElementDoubleDataframe(dataP, feature, idx);
 
@@ -82,9 +82,10 @@ static IntVector** getSplitTargets(DoubleDataframe* dataP, int feature, double c
   // create vectors with values of associated outcomes
   IntVector* allLabels = double_to_int_vector (dataP->vec[dataP->rows-1]);
 
+/*
   IntVector* trueLabels = create_int_vector();
   IntVector* falseLabels = create_int_vector();
-/*
+
   for (int i = 0; i < falseSplit->len; i++)
   {
     push_back_intVec(falseLabels, allLabels->arr[falseSplit->arr[i]]);
@@ -141,7 +142,7 @@ best_split_return getBestSplit(DoubleDataframe* dataP)
 
   const double giniBefore = getGiniImpurity(labelsBefore->arr,labelsBefore->len);
 
-  int features = dataPCpy->rows - 1;
+  int features = dataPCpy->rows - 2;
 
   best_split_return bestChoice;
   bestChoice.resultant_gini = giniBefore;
@@ -166,16 +167,12 @@ best_split_return getBestSplit(DoubleDataframe* dataP)
     //   printf("%f, ", featureVec->arr[i]);
     // }
     // printf("\n");
-
     // if (feature == 6)
     // {
     //   printf("BP\n");
     // }
 
-    
 /* /////////////////////////////////////DEBUGGING CODE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
-
-    
 
     // Calculate Gini Impurity for splitting every feature by every category
     for (int i = 0; i < featureVec->len; i++)
@@ -207,10 +204,12 @@ best_split_return getBestSplit(DoubleDataframe* dataP)
 
 /* /////////////////////////////////////DEBUGGING CODE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
+      // printf ("Split[0] length is: %d\n",split[0]->len);
       for (int i = 0; i < split[0]->len; i++)
       {
         push_back_intVec(trueSplitLabels, labelsBefore->arr[split[0]->arr[i]]);
       }
+      // printf ("Split[1] length is: %d\n",split[1]->len);
       for (int i = 0; i < split[1]->len; i++)
       {
         push_back_intVec(falseSplitLabels, labelsBefore->arr[split[1]->arr[i]]);
@@ -224,7 +223,7 @@ best_split_return getBestSplit(DoubleDataframe* dataP)
       double weightedFalseGini = (falseGini * falseSplitLabels->len) / labelsBefore->len;
 
       double weightedGiniSum = weightedTrueGini + weightedFalseGini;
-
+      
       if (weightedGiniSum < bestChoice.resultant_gini)
       { //splitting here improves on current gini impurity
         bestChoice.resultant_gini = weightedGiniSum;
