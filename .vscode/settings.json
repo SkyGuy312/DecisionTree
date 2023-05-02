@@ -3,7 +3,8 @@
     "files.associations": {
         "dataframe_csv.h": "c",
         "dataframes.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "vector.h": "c"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }

@@ -16,6 +16,7 @@ double GetElementDoubleDataframe(DoubleDataframe* df, int row, int col);
 void SetElementDoubleDataframe(DoubleDataframe* df, int row, int col, double value);
 DoubleDataframe* CopyDoubleDataframe(DoubleDataframe* source);
 void PrintDoubleDataframe(DoubleDataframe* df);
+DoubleDataframe* TransposeDataFrame(DoubleDataframe* df);
 
 
 typedef struct {

@@ -25,3 +25,16 @@ float get_max_float(float *arr, int len) {
     
     return max;
 }
+
+int get_count (int* arr, int len, int class)
+{
+    int count = 0;      // initialize counter
+    for (int i = 0; i < len; i++)
+    {
+        if (arr[i] == class)
+        {
+            count++;
+        }
+    }
+    return count;
+}

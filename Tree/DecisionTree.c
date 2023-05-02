@@ -124,11 +124,17 @@ void ConstructTree (Node* nodeP)
         DoubleDataframe** childrensData = malloc (2 * sizeof(DoubleDataframe*));
         childrensData = SplitData (nodeP->dataframe, nodeP->best_split.feature, nodeP->best_split.category);
 
+        DoubleDataframe* presData = CreateDoubleDataframe(0,0);
+        presData = CopyDoubleDataframe(childrensData[0]);
+
+        DoubleDataframe* absData = CreateDoubleDataframe(0,0);
+        absData = CopyDoubleDataframe(childrensData[1]);
+
         // if there is data after split, build a child node:
         if (childrensData[0]->cols > MIN_SAMPLES)
         {
             Node* newRightChild = newNode(childrensData[0]);
-            newRightChild->depth++;
+            newRightChild->depth = (nodeP->depth) + 1;
             nodeP->child_right = newRightChild;
             ConstructTree (nodeP->child_right);
         }
@@ -136,7 +142,7 @@ void ConstructTree (Node* nodeP)
         if (childrensData[1]->cols > MIN_SAMPLES)
         {
             Node* newLeftChild = newNode(childrensData[1]);
-            newLeftChild->depth++;
+            newLeftChild->depth = (nodeP->depth) + 1;
             nodeP->child_left = newLeftChild;
             ConstructTree(nodeP->child_left);
         }
@@ -193,6 +199,7 @@ DecisionTree* CreateDecisionTree (char* trainPath)
 {
     DoubleDataframe* trainingData = read(trainPath);
     printf("Data read successfully.\n\n");
+    // PrintDoubleDataframe(trainingData);
     trainingData = TransposeDoubleDataframe(trainingData);
     Node* rootP = newNode (trainingData);
     rootP->depth = 0;
