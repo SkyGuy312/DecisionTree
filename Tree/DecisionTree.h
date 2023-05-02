@@ -3,7 +3,7 @@
 
 #include "../Node/node.h"
 
-#define MIN_SAMPLES 1
+#define MIN_SAMPLES 3
 
 typedef struct TwoDataFrame
 {

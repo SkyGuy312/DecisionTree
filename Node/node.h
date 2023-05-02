@@ -7,7 +7,7 @@ typedef struct best_split_return
 {
     float resultant_gini;
     int feature;
-    int category;
+    float category;
 }best_split_return;
 
 typedef struct Node {
