@@ -3,7 +3,7 @@
 
 #include "../Node/node.h"
 
-#define MIN_SAMPLES 0
+#define MIN_SAMPLES 1
 
 typedef struct TwoDataFrame
 {
@@ -23,7 +23,7 @@ DecisionTree* CreateDecisionTree (char* trainPath);
 void TraverseTree();
 
 // function to split data
-static TwoDataFrame SplitData (DoubleDataframe* dataBefore, int feature, double category);
+static DoubleDataframe** SplitData (DoubleDataframe* dataBefore, int feature, double category);
 
 // function to construct more nodes
 static void ConstructTree (Node* nodeP);
