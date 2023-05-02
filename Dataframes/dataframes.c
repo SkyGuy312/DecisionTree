@@ -23,6 +23,19 @@ DoubleDataframe* TransposeDoubleDataframe(DoubleDataframe* df) {
     return tdf;
 }
 
+DoubleDataframe* TransposeDataFrame(DoubleDataframe* df) {
+    DoubleDataframe* transposed_df = CreateDoubleDataframe(df->cols, df->rows);
+
+    for (int i = 0; i < df->cols; i++) {
+        for (int j = 0; j < df->rows; j++) {
+            double value = GetElementDoubleDataframe(df, j, i);
+            SetElementDoubleDataframe(transposed_df, i, j, value);
+        }
+    }
+
+    return transposed_df;
+}
+
 double GetElementDoubleDataframe(DoubleDataframe* df, int row, int col) {
     return df->vec[row]->arr[col];
 }

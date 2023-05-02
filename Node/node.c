@@ -26,7 +26,7 @@ double getGiniImpurity(int* arr, int len)
   {
     double giniSum = 0.0;
 
-    /* Step 1: count the number of samples for each class */
+    /* Step 1: count the number classes */
 
     const int max = get_max(arr, len);
 
@@ -159,7 +159,19 @@ best_split_return getBestSplit(DoubleDataframe* dataP)
     // get the number of categories in that feature
     Vector* featureVec = CopyVector (dataPCpy->vec[feature]);
 
+    // if (feature == 6)
+    // {
+    //   printf("BP\n");
+    // }
+
+    
+
 /* /////////////////////////////////////DEBUGGING CODE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
+
+// printf ("bestChoice:\n-resultant_gini = %lf\n-feature = %d\n-category = %f\n",
+//     bestChoice.resultant_gini,
+//     bestChoice.feature,
+//     bestChoice.category);
 
     // printf ("featureVec length here is %d, it's values are:", featureVec->len);
     // for (int i = 0; i < featureVec->len; i++)
@@ -225,7 +237,8 @@ best_split_return getBestSplit(DoubleDataframe* dataP)
       double weightedGiniSum = weightedTrueGini + weightedFalseGini;
       
       if (weightedGiniSum < bestChoice.resultant_gini)
-      { //splitting here improves on current gini impurity
+      { 
+        //splitting here improves on current gini impurity
         bestChoice.resultant_gini = weightedGiniSum;
         bestChoice.feature = feature;
         bestChoice.category = featureVec->arr[i];
