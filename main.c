@@ -3,5 +3,6 @@
 
 int main ()
 {
-    DecisionTree* model = CreateDecisionTree("Dataset/Dataset.csv");
+    Node* model = CreateDecisionTree("Dataset/Dataset.csv");
+    printTree (model, 0);
 }   

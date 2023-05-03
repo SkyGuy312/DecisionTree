@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+
 static DoubleDataframe** SplitData (DoubleDataframe* dataBefore, int feature, double category)
 {
     // vectors to indexes of values which either realize the category criterion or not
@@ -124,12 +126,6 @@ void ConstructTree (Node* nodeP)
         DoubleDataframe** childrensData = malloc (2 * sizeof(DoubleDataframe*));
         childrensData = SplitData (nodeP->dataframe, nodeP->best_split.feature, nodeP->best_split.category);
 
-        DoubleDataframe* presData = CreateDoubleDataframe(0,0);
-        presData = CopyDoubleDataframe(childrensData[0]);
-
-        DoubleDataframe* absData = CreateDoubleDataframe(0,0);
-        absData = CopyDoubleDataframe(childrensData[1]);
-
         // if there is data after split, build a child node:
         if (childrensData[0]->cols > MIN_SAMPLES)
         {
@@ -195,7 +191,7 @@ IntVector Predict (char* TestPath)
 
 }
 
-DecisionTree* CreateDecisionTree (char* trainPath)
+Node* CreateDecisionTree (char* trainPath)
 {
     DoubleDataframe* trainingData = read(trainPath);
     printf("Data read successfully.\n\n");
@@ -205,9 +201,29 @@ DecisionTree* CreateDecisionTree (char* trainPath)
     rootP->depth = 0;
     ConstructTree (rootP);
 
-    DecisionTree* model;
-    model->rootP = rootP;
+    // DecisionTree* model;
+    // model->rootP = rootP;
 
-    return model;
+    return rootP;
     
+}
+
+void printTree(Node* node, int indent)
+{
+    if (node == NULL)
+        return;
+
+    for (int i = 0; i < indent; i++)
+        printf("| ");
+
+    if (node->best_split.feature == -1)
+    {
+        printf("Leaf Node: Class %d\n", node->dataframe->vec[node->dataframe->rows-1]->arr[0]);
+    }
+    else
+    {
+        printf("Feature %d <= %lf: Gini %lf\n", node->best_split.feature, node->best_split.category, node->best_split.resultant_gini);
+        printTree(node->child_right, indent+1);
+        printTree(node->child_left, indent+1);
+    }
 }

@@ -5,6 +5,8 @@
 
 #define MIN_SAMPLES 3
 
+
+
 typedef struct TwoDataFrame
 {
     DoubleDataframe pres;       //samples that realizes split criterion
@@ -17,10 +19,10 @@ typedef struct DecisionTree
 }DecisionTree;
 
 // function to initialize model with trainset
-DecisionTree* CreateDecisionTree (char* trainPath);
+Node* CreateDecisionTree (char* trainPath);
 
 // function to traverse the tree
-void TraverseTree();
+void printTree(Node* node, int indent);
 
 // function to split data
 static DoubleDataframe** SplitData (DoubleDataframe* dataBefore, int feature, double category);
